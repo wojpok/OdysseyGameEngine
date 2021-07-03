@@ -1,6 +1,6 @@
 #pragma once
 
-namespace oge {
+namespace chr {
 	class subscription {
 	public:
 		subscription* next;

@@ -5,7 +5,7 @@
 
 #include <unistd.h>
 
-namespace oge {
+namespace chr {
 	float currentTime = 0;
 	float deltaTime = 0;
 	
