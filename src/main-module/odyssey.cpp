@@ -3,6 +3,7 @@
 
 #include "../components.hpp"
 #include "odyssey.h"
+#include "../view-module/viewHidden.h"
 
 namespace oge {
 	gameObject* parent = NULL;

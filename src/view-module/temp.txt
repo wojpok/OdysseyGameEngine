@@ -1,0 +1,83 @@
+
+		GLuint VertexArrayID;
+		glGenVertexArrays(1, &VertexArrayID);
+		glBindVertexArray(VertexArrayID);
+		
+		// Load it into a VBO
+		GLuint billboard_vertex_buffer, billboard_uv_buffer;
+		/*static const GLfloat g_vertex_buffer_data[] = { 
+			 0, -1, 1,
+			 0, 1, -1,
+			 0, -1, -1,
+			 0, -1, 1,
+			 0, 1, 1,
+			 0, 1, -1,
+		};*/
+		
+		/*static const GLfloat g_vertex_buffer_data[] = { 
+			 0, 0, 1,
+			 0, 1, 0,
+			 0, 0, 0,
+			 0, 0, 1,
+			 0, 1, 1,
+			 0, 1, 0,
+		};
+		*/
+		static const GLfloat g_vertex_buffer_data[] = { 
+			 0, -0.5, 0.5,
+			 0, 0.5, -0.5,
+			 0, -0.5, -0.5,
+			 0, -0.5, 0.5,
+			 0, 0.5, 0.5,
+			 0, 0.5, -0.5,
+		};
+		
+		/*static const GLfloat g_vertex_buffer_data[] = { 
+			 0, -0.4, 0.5,
+			 0, 0.4, -0.5,
+			 0, -0.4, -0.5,
+			 0, -0.4, 0.5,
+			 0, 0.4, 0.5,
+			 0, 0.4, -0.5,
+		};*/
+		
+		glGenBuffers(1, &billboard_vertex_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, billboard_vertex_buffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_DYNAMIC_DRAW);
+		
+		//offsetting UV for easier atlas-texture-borders anti aliasing
+		//set to 0 and see the difference
+		float borderUV = 0.01f;
+		
+		/*static const GLfloat g_uv_buffer_data[] = { 
+			 1 - UVoffset, -1 + UVoffset,
+			 0+ UVoffset, 0- UVoffset,
+			 0+ UVoffset, -1+ UVoffset,
+			 1- UVoffset, -1+ UVoffset,
+			 1- UVoffset, 0- UVoffset,
+			 0+ UVoffset, 0- UVoffset
+		};*/
+		
+		static const GLfloat g_uv_buffer_data[] = { 
+			 1 - borderUV, 0 + borderUV,
+			 0+ borderUV, 1- borderUV,
+			 0+ borderUV, 0+ borderUV,
+			 1- borderUV, 0+ borderUV,
+			 1- borderUV, 1- borderUV,
+			 0+ borderUV, 1- borderUV
+		};
+		
+		/*static const GLfloat g_uv_buffer_data[] = { 
+			 0.5f  - borderUV, -0.5f + borderUV,
+			 -0.5f + borderUV, 0.5f  - borderUV,
+			 -0.5f + borderUV, -0.5f + borderUV,
+			 0.5f  - borderUV, -0.5f + borderUV,
+			 0.5f  - borderUV, 0.5f  - borderUV,
+			 -0.5f + borderUV, 0.5f  - borderUV
+		};*/
+		
+		glGenBuffers(1, &billboard_uv_buffer);
+		glBindBuffer(GL_ARRAY_BUFFER, billboard_uv_buffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(g_uv_buffer_data), g_uv_buffer_data, GL_DYNAMIC_DRAW);
+	
+		//block = new shape(billboard_vertex_buffer, billboard_uv_buffer, 6);
