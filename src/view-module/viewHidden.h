@@ -1,6 +1,11 @@
 #pragma once
 
+
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/transform.hpp>
 
 namespace view {
 		
@@ -12,5 +17,8 @@ namespace view {
 	void pushFrame();
 	bool isContextOpen();
 	void clearContext();
+	void computeMatricesFromInputs();
+	
+	extern glm::mat4 MVP;
 	
 }

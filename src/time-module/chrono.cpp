@@ -23,6 +23,7 @@ namespace chr {
 	subscription* subsQueue = NULL;
 	
 	void updateTime(float deltaTime) {
+		chr::deltaTime = deltaTime;
 		currentTime += deltaTime;
 		
 		subscription* ptr = subsQueue;

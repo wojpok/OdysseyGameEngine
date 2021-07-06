@@ -15,7 +15,13 @@ namespace view {
 	std::string rendererComponent::toString() { return "Render Component0"; }
 	
 	void rendererComponent::update() {
+		program->useProgram();
+		program->bindMVP();
+		//float identity[16] = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+		//program->bindPos(identity);
+		program->bindTexture(texture);
 		
+		mesh->draw();
 	}
 
 	//	================================================================
@@ -102,8 +108,8 @@ namespace view {
 		glUniform1i(textureId, 0);
 	}
 	
-	void shader::bindMVP(float MVP[16]) {
-		glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0]);
+	void shader::bindMVP() {
+		glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 	}
 	
 	void shader::bindPos(float Pos[16]) {

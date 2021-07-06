@@ -10,13 +10,15 @@ namespace view {
 	glm::mat4 getViewMatrix(){
 		return ViewMatrix;
 	}
+	
 	glm::mat4 getProjectionMatrix(){
 		return ProjectionMatrix;
 	}
-
+	
+	glm::mat4 MVP;
 
 	// Initial position : on +Z
-	glm::vec3 camOffset = glm::vec3( -5, 3, 3 ); 
+	glm::vec3 position = glm::vec3( -5, 0, 0 ); 
 	// Initial horizontal angle : toward -Z
 	float horizontalAngle = 3.14/2;
 	// Initial vertical angle : none
@@ -42,9 +44,9 @@ namespace view {
 		refreshFunc = ptr;
 	}
 	
-	void computeMatricesFromInputs(glm::mat4 camCenter){
+	void computeMatricesFromInputs(){
 		
-		glm::vec3 position = glm::vec3(camCenter[3][0]-30, camCenter[3][1], camCenter[3][2]);
+		//glm::vec3 position = glm::vec3(camCenter[3][0]-30, camCenter[3][1], camCenter[3][2]);
 
 		// glfwGetTime is called only once, the first time this function is called
 		static double lastTime = glfwGetTime();
@@ -56,7 +58,7 @@ namespace view {
 		if((timeElapsed += deltaTime) > frameL) {
 			frameCnt++;
 			timeElapsed -= frameL;
-			refreshFunc();
+			//refreshFunc();
 		}
 
 		// Get mouse position
@@ -66,16 +68,14 @@ namespace view {
 		
 		glfwGetCursorPos(window, &xpos, &ypos);		
 		
-		#ifndef NO_CAM_MOVEMENT
 			// Reset mouse position for next frame
-			glfwSetCursorPos(window, windowWidth/2, windowHeight/2); 		
+			glfwSetCursorPos(window, windowHeight/2, windowWidth/2); 		
 			
 			// Compute new orientation
-			horizontalAngle += mouseSpeed * float(windowWidth/2 - xpos );
-			verticalAngle   += mouseSpeed * float(windowHeight/2 - ypos );
-		#endif
-		
+			//horizontalAngle += mouseSpeed * float(windowHeight/2 - xpos );
+			//verticalAngle   += mouseSpeed * float(windowWidth/2 - ypos );
 		// Direction : Spherical coordinates to Cartesian coordinates conversion
+		
 		glm::vec3 direction(
 			cos(verticalAngle) * sin(horizontalAngle), 
 			sin(verticalAngle),
@@ -93,7 +93,7 @@ namespace view {
 		glm::vec3 up = glm::cross( right, direction );
 
 		// Move forward
-		/*if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
+		if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
 			position += direction * deltaTime * speed;
 		}
 		// Move backward
@@ -107,7 +107,7 @@ namespace view {
 		// Strafe left
 		if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
 			position -= right * deltaTime * speed;
-		}*/
+		}
 
 		float FoV = initialFoV;//  - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
 
@@ -120,7 +120,9 @@ namespace view {
 									position+direction, // and looks here : at the same position, plus "direction"
 									up                  // Head is up (set to 0,-1,0 to look upside-down)
 							   );
-
+		
+		MVP = ProjectionMatrix * ViewMatrix;
+		
 		// For the next frame, the "last time" will be "now"
 		lastTime = currentTime;
 	}

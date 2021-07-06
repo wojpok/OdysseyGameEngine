@@ -19,7 +19,7 @@ namespace view {
 	
 		void useProgram();
 		void bindTexture(unsigned int tex);
-		virtual void bindMVP(float MVP[16]);
+		virtual void bindMVP();
 		void bindPos(float pos[16]);
 	};
 	

@@ -8,3 +8,4 @@
 #include "components.hpp"
 #include "main-module/odyssey.h"
 #include "time-module/chrono.h"
+#include "view-module/view.h"
