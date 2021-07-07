@@ -46,27 +46,14 @@ namespace view {
 	
 	void computeMatricesFromInputs(){
 		
-		//glm::vec3 position = glm::vec3(camCenter[3][0]-30, camCenter[3][1], camCenter[3][2]);
-
-		// glfwGetTime is called only once, the first time this function is called
-		static double lastTime = glfwGetTime();
-
-		// Compute time difference between current and last frame
-		double currentTime = glfwGetTime();
-		deltaTime = float(currentTime - lastTime);
-
-		if((timeElapsed += deltaTime) > frameL) {
-			frameCnt++;
-			timeElapsed -= frameL;
-			//refreshFunc();
-		}
+		position = *(glm::vec3*)camera::position;
 
 		// Get mouse position
 		double xpos = 512 , ypos = 384;
 		
 		// ============ camera rotation disabled, uncomment if needed ================
 		
-		glfwGetCursorPos(window, &xpos, &ypos);		
+		/*glfwGetCursorPos(window, &xpos, &ypos);		
 		
 			// Reset mouse position for next frame
 			glfwSetCursorPos(window, windowHeight/2, windowWidth/2); 		
@@ -75,7 +62,7 @@ namespace view {
 			//horizontalAngle += mouseSpeed * float(windowHeight/2 - xpos );
 			//verticalAngle   += mouseSpeed * float(windowWidth/2 - ypos );
 		// Direction : Spherical coordinates to Cartesian coordinates conversion
-		
+		*/
 		glm::vec3 direction(
 			cos(verticalAngle) * sin(horizontalAngle), 
 			sin(verticalAngle),
@@ -93,7 +80,7 @@ namespace view {
 		glm::vec3 up = glm::cross( right, direction );
 
 		// Move forward
-		if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
+		/*if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
 			position += direction * deltaTime * speed;
 		}
 		// Move backward
@@ -107,7 +94,7 @@ namespace view {
 		// Strafe left
 		if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
 			position -= right * deltaTime * speed;
-		}
+		}*/
 
 		float FoV = initialFoV;//  - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
 
@@ -124,6 +111,6 @@ namespace view {
 		MVP = ProjectionMatrix * ViewMatrix;
 		
 		// For the next frame, the "last time" will be "now"
-		lastTime = currentTime;
+		//lastTime = currentTime;
 	}
 }

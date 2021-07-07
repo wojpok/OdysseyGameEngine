@@ -2,7 +2,7 @@ example.out: main.o bin/odyssey.a
 	g++ -lstdc++ main.o bin/odyssey.a -o example.out -lm -lGL -lGLU -lglut -lglfw -lGLEW
 
 main.o: main.cpp
-	g++ -lstdc++ -lglfw -Wall -Wextra -Werror -c -o main.o main.cpp 
+	g++ -lstdc++ -lglfw -c -o main.o main.cpp 
 	
 bin/odyssey.a: bin/main-module.o bin/time-module.o bin/view-module.o
 	ar rsv bin/odyssey.a bin/main-module.o bin/time-module.o bin/view-module.o

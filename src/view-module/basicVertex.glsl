@@ -12,7 +12,7 @@ uniform mat4 offset;
 
 void main(){
 
-	gl_Position =  MVP  * vec4(vertexPosition_modelspace, 1);
+	gl_Position =  MVP * offset * vec4(vertexPosition_modelspace, 1);
 	
 	// UV of the vertex. No special space for this one.
 	UV = vertexUV;
