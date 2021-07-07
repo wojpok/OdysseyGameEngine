@@ -12,4 +12,5 @@ namespace oge {
 	
 	extern gameObject* parent;
 	
+	void gameLoop();
 }

@@ -2,10 +2,38 @@
 #include <vector>
 
 #include "../components.hpp"
-#include "odyssey.h"
+#include "../odysseyGameEngine.h"
+//#include "odyssey.h"
 #include "../view-module/viewHidden.h"
 
 namespace oge {
+	void gameLoop() {
+		double lastTime = glfwGetTime();
+	
+		double currentTime = glfwGetTime();
+		
+		int frame = -1;
+		
+		
+		do {	
+			currentTime = glfwGetTime();
+			view::clearFrame();
+			view::computeMatricesFromInputs();
+			
+			chr::updateTime(float(currentTime - lastTime));
+			chr::updateQueue();
+			
+			updateAllGameObjects();
+			
+			lastTime = currentTime;
+			
+			view::pushFrame();
+		} while(view::isContextOpen());
+		
+		view::clearContext();
+	}
+	
+	
 	gameObject* parent = NULL;
 	std::vector<gameObject*> objects = {};
 	int uniqueId = 0;
