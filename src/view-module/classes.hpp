@@ -156,6 +156,12 @@ namespace view {
 	shader::shader(const char * vertex_file_path, const char * fragment_file_path) {
 		program = LoadShaders(vertex_file_path, fragment_file_path);
 		bindShader(program);
+		
+		for (int i = 0; i < 3; i++){
+			customParams[i] = 0;
+			customValues[i] = 0;
+		}
+		
 	}
 		
 	void shader::bindShader(unsigned int prog) {
@@ -179,5 +185,19 @@ namespace view {
 		glUniformMatrix4fv(posId, 1, GL_FALSE, &Pos[0]);
 	}
 	
-	void shader::useProgram() {glUseProgram(program); }
+	void shader::useProgram() {
+		glUseProgram(program); 
+		//glUniform1f(glGetUniformLocation(program, "time"), chr::currentTime);
+		
+		for (int i = 0; i < 3; i++){
+			if(customParams[i] != 0) {
+				glUniform1f(customParams[i], customValues[i]);
+			}
+		}
+		
+	}
+	
+	void shader::findUniform(const char* name, int i) {
+		customParams[i] = glGetUniformLocation(program, name);
+	}
 }

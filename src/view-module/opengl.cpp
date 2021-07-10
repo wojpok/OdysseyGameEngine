@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "../odysseyGameEngine.h"
 #include "../components.hpp"
 #include "view.h"
 #include "viewHidden.h"
@@ -66,7 +67,7 @@ namespace view {
 		glfwPollEvents();
 		glfwSetCursorPos(window, windowWidth/2, windowHeight/2);
 
-		glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
 		//anti-aliasing
 		glEnable(GL_MULTISAMPLE);  

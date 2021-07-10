@@ -15,6 +15,10 @@ namespace view {
 		unsigned int time;
 		unsigned int textureId;
 		
+		unsigned int customParams[3];
+		float customValues[3];
+		
+		
 		shader();
 		shader(const char * vertex_file_path,const char * fragment_file_path);
 		
@@ -23,6 +27,7 @@ namespace view {
 		void bindTexture(unsigned int tex);
 		virtual void bindMVP();
 		void bindPos(float pos[16]);
+		void findUniform(const char* name, int i);
 	};
 	
 	// shape class - provides buffers with mesh UVs and Vertices
