@@ -1,48 +1,32 @@
 #include "src/odysseyGameEngine.h"
 
 #include "src/view-module/viewHidden.h"
+#include "math2D.hpp"
 
-float playerSpeed = 2;
-view::shader *sh2;
-
-class timer : public oge::component {
-	std::string toString() override { return "Player Left Component"; }
+class staticBoxTrigger {
 public:
-	view::rendererComponent* rend;
+	vector2 origin;
+	vector2 size;
+};
+
+class dynamicBoxCollider {
+public:
+	static vector2 gravity;
+
+	vector2 origin;
+	vector2 size;
 	
-	float x, y;
-	
-	timer() { x = y = 0; }
-	
-	void update() override {
-		//sh2->customValues[0] = chr::currentTime;
-		
-		if (glfwGetKey(view::window, GLFW_KEY_W ) == GLFW_PRESS){
-			x += 0.1 * chr::deltaTime;
-		}
-		
-		if (glfwGetKey(view::window, GLFW_KEY_S ) == GLFW_PRESS){
-			x -= 0.1 * chr::deltaTime;
-		}
-		
-		if (glfwGetKey(view::window, GLFW_KEY_A ) == GLFW_PRESS){
-			y -= 0.1 * chr::deltaTime;
-		}
-		
-		if (glfwGetKey(view::window, GLFW_KEY_D ) == GLFW_PRESS){
-			y += 0.1 * chr::deltaTime;
-		}
-		
-		sh2->customValues[0] = 0.7*cos(0.05*chr::currentTime);
-		sh2->customValues[1] = 0.5*sin(0.05*chr::currentTime);
-	}
+	vector2 velocity;
 };
 
 int main() {
 	view::init();
 	
 	view::shader *sh = new view::shader("src/view-module/basicVertex.glsl","src/view-module/basicFragment.glsl");
-	sh2 = new view::shader("src/view-module/basicVertex.glsl","src/view-module/mandFragment.glsl");
+	//sh2 = new view::shader("src/view-module/basicVertex.glsl","src/view-module/mandFragment.glsl");
+	
+	staticBoxTrigger sbt;
+	dynamicBoxCollider dbc;
 	
 	static const GLfloat square[] = {
 		 0, -0.125, 0.125,
@@ -51,24 +35,6 @@ int main() {
 		 0, -0.125, 0.125,
 		 0, 0.125, 0.125,
 		 0, 0.125, -0.125,
-	};
-	
-	static const GLfloat background[] = {
-		 1, -3.5, 3.5,
-		 1, 3.5, -3.5,
-		 1, -3.5, -3.5,
-		 1, -3.5, 3.5,
-		 1, 3.5, 3.5,
-		 1, 3.5, -3.5,
-	};
-	
-	static const GLfloat player[] = {
-		 0, -0.5, 0.125,
-		 0, 0.5, -0.125,
-		 0, -0.5, -0.125,
-		 0, -0.5, 0.125,
-		 0, 0.5, 0.125,
-		 0, 0.5, -0.125,
 	};
 	
 	float borderUV = 0.01f;
@@ -86,14 +52,9 @@ int main() {
 	unsigned int blackT = view::loadBMP_custom("black.bmp");
 	
 	view::shape* squareS = new view::shape(g_uv_buffer_data, 12, square, 18, 6);
-	view::shape* bgS = new view::shape(g_uv_buffer_data, 12, background, 18, 6);
-	view::shape* playerS = new view::shape(g_uv_buffer_data, 12, player, 18, 6);
 			
 	oge::gameObject* bg = oge::createNewGameObject();
-	bg->components.push_back(new view::rendererComponent(sh2, bgS, blackT));
-	bg->components.push_back(new timer());
-	sh2->findUniform("offX", 0);
-	sh2->findUniform("offY", 1);
+	bg->components.push_back(new view::rendererComponent(sh, squareS, whiteT));
 
 	
 	oge::gameLoop();
