@@ -1,13 +1,22 @@
-#include "src/odysseyGameEngine.h"
 
 #include "src/view-module/viewHidden.h"
 #include "math2D.hpp"
 
+<<<<<<< HEAD
 class staticBoxTrigger {
 public:
 	vector2 origin;
 	vector2 size;
 };
+=======
+#include "src/odysseyGameEngine.h"
+
+
+#include "math2D.hpp"
+
+float playerSpeed = 2;
+view::shader *sh2;
+>>>>>>> temp
 
 class dynamicBoxCollider {
 public:
@@ -16,7 +25,21 @@ public:
 	vector2 origin;
 	vector2 size;
 	
+<<<<<<< HEAD
 	vector2 velocity;
+=======
+	void update() override {
+		oge::parent->transform[3] += chr::deltaTime;
+		
+		if (glfwGetKey(view::window, GLFW_KEY_W ) == GLFW_PRESS){
+			oge::parent->transform[1] += chr::deltaTime;
+		}
+		
+		if (glfwGetKey(view::window, GLFW_KEY_S ) == GLFW_PRESS){
+			oge::parent->transform[1] -= chr::deltaTime;
+		}
+	}
+>>>>>>> temp
 };
 
 int main() {
@@ -55,7 +78,11 @@ int main() {
 			
 	oge::gameObject* bg = oge::createNewGameObject();
 	bg->components.push_back(new view::rendererComponent(sh, squareS, whiteT));
+<<<<<<< HEAD
 
+=======
+	bg->components.push_back(new timer());
+>>>>>>> temp
 	
 	oge::gameLoop();
 	

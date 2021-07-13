@@ -1,7 +1,5 @@
 #pragma once
 
-class vector2 {
-public:
 	float x, y;
 	
 	vector2(float dx, float dy) : x(dx), y(dy) { }
@@ -51,4 +49,37 @@ public:
 		values[1][0] = values[0][1] = 0;
 	}
 };
+
+	
+	mat2(float ang) {
+		values[0][0] = values[1][1] = cos(ang);
+		values[1][0] = -(values[0][1] = sin(ang));
+	}
+	
+	mat2(float a, float b, float c, float d) {
+		values[0][0] = a;
+		values[0][1] = b;
+		values[1][0] = c;
+		values[1][1] = d;
+	}
+	
+	friend std::ostream& operator <<(std::ostream& os, const mat2 mat) {
+		return os<<"|"<<mat.values[0][0]<<" "<<mat.values[0][1]<<"|\n|"<<mat.values[1][0]<<" "<<mat.values[1][1]<<"|";
+	}
+	
+	vector2 operator*(vector2 vec) {
+		return vector2( vector2(values[0][0], values[0][1]) * vec,
+						vector2(values[1][0], values[1][1]) * vec);
+	}
+};
+
+
+class line {
+	vector2 pos, dir;
+};
+
+vector2 lineVsLineCollision(line line1, line line2) {
+	
+	return vector2(0, 0);
+}
 
