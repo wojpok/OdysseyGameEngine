@@ -1,6 +1,10 @@
-#include "src/odysseyGameEngine.h"
 
 #include "src/view-module/viewHidden.h"
+
+#include "src/odysseyGameEngine.h"
+
+
+#include "math2D.hpp"
 
 float playerSpeed = 2;
 view::shader *sh2;
@@ -15,26 +19,15 @@ public:
 	timer() { x = y = 0; }
 	
 	void update() override {
-		//sh2->customValues[0] = chr::currentTime;
+		oge::parent->transform[3] += chr::deltaTime;
 		
 		if (glfwGetKey(view::window, GLFW_KEY_W ) == GLFW_PRESS){
-			x += 0.1 * chr::deltaTime;
+			oge::parent->transform[1] += chr::deltaTime;
 		}
 		
 		if (glfwGetKey(view::window, GLFW_KEY_S ) == GLFW_PRESS){
-			x -= 0.1 * chr::deltaTime;
+			oge::parent->transform[1] -= chr::deltaTime;
 		}
-		
-		if (glfwGetKey(view::window, GLFW_KEY_A ) == GLFW_PRESS){
-			y -= 0.1 * chr::deltaTime;
-		}
-		
-		if (glfwGetKey(view::window, GLFW_KEY_D ) == GLFW_PRESS){
-			y += 0.1 * chr::deltaTime;
-		}
-		
-		sh2->customValues[0] = 0.7*cos(0.05*chr::currentTime);
-		sh2->customValues[1] = 0.5*sin(0.05*chr::currentTime);
 	}
 };
 
@@ -90,11 +83,8 @@ int main() {
 	view::shape* playerS = new view::shape(g_uv_buffer_data, 12, player, 18, 6);
 			
 	oge::gameObject* bg = oge::createNewGameObject();
-	bg->components.push_back(new view::rendererComponent(sh2, bgS, blackT));
+	bg->components.push_back(new view::rendererComponent(sh, squareS, whiteT));
 	bg->components.push_back(new timer());
-	sh2->findUniform("offX", 0);
-	sh2->findUniform("offY", 1);
-
 	
 	oge::gameLoop();
 	

@@ -59,16 +59,6 @@ namespace view {
 		
 		std::string toString() override;
 		void update() override;
-		
-		float getX();
-		float getY();
-		float getZ();
-		
-		void setX(float x);
-		void setY(float y);
-		void setZ(float z);
-		
-		void setPos(float x, float y, float z);
 	};
 	
 	class camera : public oge::component {

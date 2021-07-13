@@ -40,24 +40,10 @@ namespace view {
 	void rendererComponent::update() {
 		program->useProgram();
 		program->bindMVP();
-		program->bindPos(transform);
+		program->bindPos(oge::parent->transform);
 		program->bindTexture(texture);
 		
 		mesh->draw();
-	}
-	
-	float rendererComponent::getX() { return transform[12]; }
-	float rendererComponent::getY() { return transform[13]; }
-	float rendererComponent::getZ() { return transform[14]; }
-	
-	void rendererComponent::setX(float x) { transform[12] = x; }
-	void rendererComponent::setY(float y) { transform[13] = y; }
-	void rendererComponent::setZ(float z) { transform[14] = z; }
-	
-	void rendererComponent::setPos(float x, float y, float z) {
-		 transform[12] = x;
-		 transform[13] = y;
-		 transform[14] = z;
 	}
 
 	//	================================================================
@@ -181,8 +167,8 @@ namespace view {
 		glUniformMatrix4fv(MVPID, 1, GL_FALSE, &MVP[0][0]);
 	}
 	
-	void shader::bindPos(float Pos[16]) {
-		glUniformMatrix4fv(posId, 1, GL_FALSE, &Pos[0]);
+	void shader::bindPos(float Pos[4]) {
+		glUniform4fv(posId, 1, Pos);
 	}
 	
 	void shader::useProgram() {
