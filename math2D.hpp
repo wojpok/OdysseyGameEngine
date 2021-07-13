@@ -1,5 +1,7 @@
 #pragma once
 
+class vector2 {
+public:
 	float x, y;
 	
 	vector2(float dx, float dy) : x(dx), y(dy) { }
@@ -48,8 +50,6 @@ public:
 		values[0][0] = values[1][1] = 1;
 		values[1][0] = values[0][1] = 0;
 	}
-};
-
 	
 	mat2(float ang) {
 		values[0][0] = values[1][1] = cos(ang);

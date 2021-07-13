@@ -1,33 +1,13 @@
 
 #include "src/view-module/viewHidden.h"
-#include "math2D.hpp"
-
-<<<<<<< HEAD
-class staticBoxTrigger {
-public:
-	vector2 origin;
-	vector2 size;
-};
-=======
 #include "src/odysseyGameEngine.h"
-
-
 #include "math2D.hpp"
 
 float playerSpeed = 2;
 view::shader *sh2;
->>>>>>> temp
 
-class dynamicBoxCollider {
+class timer : public oge::component {
 public:
-	static vector2 gravity;
-
-	vector2 origin;
-	vector2 size;
-	
-<<<<<<< HEAD
-	vector2 velocity;
-=======
 	void update() override {
 		oge::parent->transform[3] += chr::deltaTime;
 		
@@ -39,7 +19,6 @@ public:
 			oge::parent->transform[1] -= chr::deltaTime;
 		}
 	}
->>>>>>> temp
 };
 
 int main() {
@@ -47,9 +26,6 @@ int main() {
 	
 	view::shader *sh = new view::shader("src/view-module/basicVertex.glsl","src/view-module/basicFragment.glsl");
 	//sh2 = new view::shader("src/view-module/basicVertex.glsl","src/view-module/mandFragment.glsl");
-	
-	staticBoxTrigger sbt;
-	dynamicBoxCollider dbc;
 	
 	static const GLfloat square[] = {
 		 0, -0.125, 0.125,
@@ -78,11 +54,8 @@ int main() {
 			
 	oge::gameObject* bg = oge::createNewGameObject();
 	bg->components.push_back(new view::rendererComponent(sh, squareS, whiteT));
-<<<<<<< HEAD
 
-=======
 	bg->components.push_back(new timer());
->>>>>>> temp
 	
 	oge::gameLoop();
 	
