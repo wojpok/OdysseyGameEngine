@@ -18,18 +18,18 @@ vector2 gravity(0, 0);
 
 staticCollider::staticCollider() {
 	staticColliders.push_back(this);
-	origin = vector2(oge::parent->transform[1], oge::parent->transform[2]);
+	origin = vector2(oge::parent->transform[2], oge::parent->transform[1]);
 }
 
 void staticCollider::update() {
-	origin = vector2(oge::parent->transform[1], oge::parent->transform[2]);
+	origin = vector2(oge::parent->transform[2], oge::parent->transform[1]);
 }
 
 	
 dynamicCollider::dynamicCollider() {
 	parent = NULL;
 	dynamicColliders.push_back(this);
-	origin = vector2(oge::parent->transform[1], oge::parent->transform[2]);
+	origin = vector2(oge::parent->transform[2], oge::parent->transform[1]);
 }
 
 void dynamicCollider::update() {	
@@ -42,38 +42,44 @@ void dynamicCollider::update() {
 		
 		if(sc == NULL)
 			continue;
+		
+		// left-bottom corners
+		vector2 lbC = origin + originOffset;
+		vector2 lbCS = sc->origin + sc->originOffset;
+		//std::cout<<lbC<<" "<<lbCS<<" "<<sc->size<<std::endl;
+		if(aabbCollisionDetection(lbC, size, lbCS, sc->size)) {
 			
-		if(aabbCollisionDetection(origin, size, sc->origin, sc->size)) {
-			vector2 dist1 = origin - sc->origin;
-			vector2 dist2 = origin + size - sc->origin;
+			float correctionX = 0 , correctionY;
 			
-			float tx = std::min(dist1.x, dist2.x);
-			float ty = std::min(dist1.y, dist2.y);
+			float collisionOffset = 0.0001;
 			
-			std::cout<<sc->origin<<" "<<origin<<std::endl;
+			if(lbC.x > lbCS.x)
+				correctionX =  lbCS.x + sc->size.x - lbC.x  + collisionOffset;
+			else
+				correctionX =  lbCS.x - lbC.x - size.x - collisionOffset;
+				
 			
-			if(tx < ty) {
-				velocity.x = 0;
-				if(dist1.x > dist2.x)
-					parent->transform[2] = sc->origin.y + sc->size.y + 0.001;
-				else 
-					parent->transform[2] = sc->origin.y - size.y - 0.001;
+			
+			if(lbC.y > lbCS.y)
+				correctionY =  lbCS.y + sc->size.y - lbC.y  + collisionOffset;
+			else
+				correctionY =  lbCS.y - lbC.y - size.y - collisionOffset;
+			
+			if(std::abs(correctionY) < std::abs(correctionX)) {
+				parent->transform[1] += correctionY;
+				velocity.y = 0;
 			}
 			else {
-				velocity.y = 0;
-				if(dist1.y < dist2.y)
-					parent->transform[1] = sc->origin.x + sc->size.x + 0.001;
-				else 
-					parent->transform[1] = sc->origin.x - size.x - 0.001;
+				parent->transform[2] += correctionX;
+				velocity.x = 0;
 			}
-			
 		}
 	}
 	
 	oge::parent->transform[1] += velocity.y * chr::deltaTime;
 	oge::parent->transform[2] += velocity.x * chr::deltaTime;
 	
-	origin = vector2(oge::parent->transform[1], oge::parent->transform[2]);
+	origin = vector2(oge::parent->transform[2], oge::parent->transform[1]);
 	
 	//std::cout<<origin<<std::endl;
 }
@@ -143,7 +149,8 @@ int main() {
 
 	dynamicCollider* col = new dynamicCollider();
 	col->velocity = vector2(0, -1);
-	col->size = vector2(0.125, 0.125);
+	col->size = vector2(0.25, 0.25);
+	col->originOffset = vector2(-0.125, -0.125);
 	
 	bg->components.push_back(new timer());
 	bg->components.push_back(col);
@@ -155,7 +162,8 @@ int main() {
 	bg2->setPos(0, -1, 0);
 	
 	staticCollider* col2 = new staticCollider();
-	col2->size = vector2(0.125, 0.125);
+	col2->size = vector2(0.25, 0.25);
+	col2->originOffset = vector2(-0.125, -0.125);
 	
 	bg2->components.push_back(col2);
 	
