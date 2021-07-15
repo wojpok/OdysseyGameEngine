@@ -14,6 +14,7 @@ public:
 
 class dynamicCollider : public physic {
 public:
+	oge::gameObject* parent;
 
 	vector2 velocity;	
 	vector2 size;

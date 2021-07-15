@@ -41,6 +41,7 @@ namespace oge {
 	gameObject* createNewGameObject() {
 		uniqueId++;
 		gameObject* ptr = new gameObject(uniqueId);
+		parent = ptr;
 		objects.push_back(ptr);
 		return ptr;
 	}

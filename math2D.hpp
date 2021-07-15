@@ -40,6 +40,15 @@ public:
 	float operator*(vector2 vec2) {
 		return x * vec2.x + y * vec2.y;
 	}
+	
+	vector2 operator/(vector2 vec2) {
+		return vector2(x / vec2.x, y / vec2.y);
+	}
+	
+	void operator/=(vector2 vec2) {
+		x /= vec2.x;
+		y /= vec2.y;
+	}
 };
 
 class mat2 {
@@ -82,4 +91,17 @@ vector2 lineVsLineCollision(line line1, line line2) {
 	
 	return vector2(0, 0);
 }
+
+bool aabbCollisionDetection(vector2 origin1, vector2 size1, vector2 origin2, vector2 size2) {
+	return ((origin1.x <= origin2.x + size2.x) &&
+			(origin1.x + size1.x >= origin2.x) &&
+			(origin1.y <= origin2.y + size2.y) &&
+			(origin1.y + size1.y >= origin2.y));
+}
+
+
+
+
+
+
 
