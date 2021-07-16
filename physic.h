@@ -6,6 +6,11 @@ class physic : public oge::component {
 
 class staticCollider : public physic {
 public:
+	bool solid;
+	
+	std::function<void(oge::gameObject*)> onCollisionOccurs;
+	
+	
 	vector2 size;
 	vector2 origin;
 	vector2 originOffset;

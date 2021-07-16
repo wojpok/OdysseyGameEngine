@@ -21,6 +21,8 @@ vector2 gravity(0, -10);
 staticCollider::staticCollider() {
 	staticColliders.push_back(this);
 	origin = vector2(oge::parent->transform[2], oge::parent->transform[1]);
+	solid = true;
+	onCollisionOccurs = NULL;
 }
 
 void staticCollider::update() {
@@ -52,29 +54,39 @@ void dynamicCollider::update() {
 		//std::cout<<lbC<<" "<<lbCS<<" "<<sc->size<<std::endl;
 		if(aabbCollisionDetection(lbC, size, lbCS, sc->size)) {
 			
-			float correctionX = 0 , correctionY;
-			
-			float collisionOffset = 0.0001;
-			
-			if(lbC.x > lbCS.x)
-				correctionX =  lbCS.x + sc->size.x - lbC.x  + collisionOffset;
-			else
-				correctionX =  lbCS.x - lbC.x - size.x - collisionOffset;
+			if(sc->solid) {
+				float correctionX = 0 , correctionY;
 				
-			
-			
-			if(lbC.y > lbCS.y)
-				correctionY =  lbCS.y + sc->size.y - lbC.y  + collisionOffset;
-			else
-				correctionY =  lbCS.y - lbC.y - size.y - collisionOffset;
-			
-			if(std::abs(correctionY) < std::abs(correctionX)) {
-				prediction.y += correctionY;
-				velocity.y = 0;
+				float collisionOffset = 0.0001;
+				
+				if(lbC.x > lbCS.x)
+					correctionX =  lbCS.x + sc->size.x - lbC.x  + collisionOffset;
+				else
+					correctionX =  lbCS.x - lbC.x - size.x - collisionOffset;
+					
+				
+				
+				if(lbC.y > lbCS.y)
+					correctionY =  lbCS.y + sc->size.y - lbC.y  + collisionOffset;
+				else
+					correctionY =  lbCS.y - lbC.y - size.y - collisionOffset;
+				
+				if(std::abs(correctionY) < std::abs(correctionX)) {
+					prediction.y += correctionY;
+					velocity.y = 0;
+				}
+				else {
+					prediction.x += correctionX;
+					velocity.x = 0;
+				}
 			}
+			
 			else {
-				prediction.x += correctionX;
-				velocity.x = 0;
+				
+			}
+			
+			if(sc->onCollisionOccurs != NULL) {
+				sc->onCollisionOccurs(parent);
 			}
 		}
 	}
@@ -99,21 +111,21 @@ public:
 		}
 		
 		if(glfwGetKey(view::window, GLFW_KEY_S) == GLFW_PRESS) {
-			col->velocity.y -= chr::deltaTime*3;
+			col->velocity.y -= 3 * chr::deltaTime;
 		}
 		if(glfwGetKey(view::window, GLFW_KEY_W) == GLFW_PRESS) {
 			col->velocity.y = 4;
 		}
 		
 		if(glfwGetKey(view::window, GLFW_KEY_A) == GLFW_PRESS) {
-			col->velocity.x -= chr::deltaTime*3;
+			col->velocity.x -= 3 * chr::deltaTime;
 		}
 		if(glfwGetKey(view::window, GLFW_KEY_D) == GLFW_PRESS) {
-			col->velocity.x += chr::deltaTime*3;
+			col->velocity.x += 3 * chr::deltaTime;
 		}
 		
-		view::camera::position[2] = (oge::parent->getZ() + 2*view::camera::position[2])/3;
-		view::camera::position[1] = (oge::parent->getY() + 2*view::camera::position[1])/3;
+		view::camera::position[2] = (oge::parent->getZ() + 4*view::camera::position[2])/5;
+		view::camera::position[1] = (oge::parent->getY() + 4*view::camera::position[1])/5;
 	}
 };
 
@@ -163,7 +175,7 @@ int main() {
 	unsigned int blackT = view::loadBMP_custom("black.bmp");
 	
 	view::shape* squareS = new view::shape(g_uv_buffer_data, 12, shapeGen(0.125, 0.125), 18, 6);
-	view::shape* platformS = new view::shape(g_uv_buffer_data, 12, shapeGen(0.125, 1), 18, 6);
+	view::shape* platformS = new view::shape(g_uv_buffer_data, 12, shapeGen(1, 0.125), 18, 6);
 	
 	
 	// ==========================================================
@@ -181,15 +193,17 @@ int main() {
 	// ==========================================================
 	for(int i = 0; i < 10; i++) {
 		oge::gameObject* bg2 = oge::createNewGameObject();
-		bg2->components.push_back(new view::rendererComponent(sh, platformS, whiteT));
+		bg2->components.push_back(new view::rendererComponent(sh, squareS, whiteT));
 		
-		bg2->setPos(0, 2*i - 2, 3*i);
+		bg2->setPos(0, i, i);
 		
 		staticCollider* col2 = new staticCollider();
-		col2->size = vector2(2, 0.25);
-		col2->originOffset = vector2(-1, -0.125);
+		col2->size = vector2(0.25, 0.25);
+		col2->originOffset = vector2(-0.125, -0.125);
 		
 		bg2->components.push_back(col2);
+		col2->solid = false;
+		col2->onCollisionOccurs = [=](oge::gameObject* parent) { std::cout<<"Collision at: "<<i<<std::endl; };
 	}
 	// ==========================================================
 	oge::gameObject* physicEngine = oge::createNewGameObject();
