@@ -15,6 +15,10 @@ void physic::update() {
 	}
 }
 
+int sgn(float val) {
+	if(val < 0) return -1;
+	return val != 0;
+}
 
 vector2 gravity(0, -10);
 
@@ -34,6 +38,7 @@ dynamicCollider::dynamicCollider() {
 	parent = NULL;
 	dynamicColliders.push_back(this);
 	origin = vector2(oge::parent->transform[2], oge::parent->transform[1]);
+	onCollisionOccurs = NULL;
 }
 
 void dynamicCollider::update() {	
@@ -55,7 +60,7 @@ void dynamicCollider::update() {
 		if(aabbCollisionDetection(lbC, size, lbCS, sc->size)) {
 			
 			if(sc->solid) {
-				float correctionX = 0 , correctionY;
+				float correctionX, correctionY;
 				
 				float collisionOffset = 0.0001;
 				
@@ -73,11 +78,20 @@ void dynamicCollider::update() {
 				
 				if(std::abs(correctionY) < std::abs(correctionX)) {
 					prediction.y += correctionY;
-					velocity.y = 0;
+					
+					//resolving a rare case where slow moving dopping of the ledge aligned its
+					//movement to other side of the colliding object
+					
+					//In other words -> If object is moving out of collision range, reseting it's velocity isn't necessary
+					if(sgn(velocity.y) != sgn(correctionY))
+						velocity.y = 0;
 				}
 				else {
 					prediction.x += correctionX;
-					velocity.x = 0;
+					
+					//same as Y-axis
+					if(sgn(velocity.x) != sgn(correctionX))
+						velocity.x = 0;
 				}
 			}
 			
@@ -87,6 +101,10 @@ void dynamicCollider::update() {
 			
 			if(sc->onCollisionOccurs != NULL) {
 				sc->onCollisionOccurs(parent);
+			}
+			
+			if(onCollisionOccurs != NULL) {
+				onCollisionOccurs(parent);
 			}
 		}
 	}
@@ -187,6 +205,8 @@ int main() {
 	col->size = vector2(0.25, 0.25);
 	col->originOffset = vector2(-0.125, -0.125);
 	
+	col->onCollisionOccurs = [](oge::gameObject* parent) {};
+	
 	bg->components.push_back(new timer());
 	bg->components.push_back(col);
 	
@@ -195,14 +215,14 @@ int main() {
 		oge::gameObject* bg2 = oge::createNewGameObject();
 		bg2->components.push_back(new view::rendererComponent(sh, squareS, whiteT));
 		
-		bg2->setPos(0, i, i);
+		bg2->setPos(0, i-2, i);
 		
 		staticCollider* col2 = new staticCollider();
 		col2->size = vector2(0.25, 0.25);
 		col2->originOffset = vector2(-0.125, -0.125);
 		
 		bg2->components.push_back(col2);
-		col2->solid = false;
+		col2->solid = true;
 		col2->onCollisionOccurs = [=](oge::gameObject* parent) { std::cout<<"Collision at: "<<i<<std::endl; };
 	}
 	// ==========================================================

@@ -24,6 +24,8 @@ public:
 	oge::gameObject* parent;
 
 	vector2 velocity;
+	
+	std::function<void(oge::gameObject*)> onCollisionOccurs;
 		
 	vector2 size;
 	vector2 origin;
